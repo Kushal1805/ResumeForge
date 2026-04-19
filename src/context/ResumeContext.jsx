@@ -149,13 +149,19 @@ export const ResumeContextProvider = ({ children }) => {
     try {
       if (window.location.hash) {
         const decoded = decodeState(window.location.hash);
-        if (decoded) {
+        if (decoded && decoded.meta && decoded.sections) {
           window.location.hash = '';
           return decoded;
         }
       }
       const local = localStorage.getItem('resumeState');
-      return local ? JSON.parse(local) : seedData;
+      if (local) {
+        const parsed = JSON.parse(local);
+        if (parsed.meta && parsed.sections) {
+          return parsed;
+        }
+      }
+      return seedData;
     } catch {
       return seedData;
     }

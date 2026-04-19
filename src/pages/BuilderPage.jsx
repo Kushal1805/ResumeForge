@@ -55,7 +55,7 @@ export default function BuilderPage() {
     };
   }, [currentUser?.uid, resumeId]);
 
-  if (!ready || !state?.meta || !state?.sections) {
+  if (!ready) {
     return (
       <div className="flex items-center justify-center h-screen bg-[#0F0F13]">
         <div className="flex items-center space-x-3 text-[#F1F0FF]">
