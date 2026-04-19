@@ -29,22 +29,30 @@ export default function BuilderPage() {
 
     let cancelled = false;
 
+    // Safety timeout: force open the builder after 3 seconds if Firestore hangs
+    const fallbackTimer = setTimeout(() => {
+      if (!cancelled) setReady(true);
+    }, 3000);
+
     getResume(currentUser.uid, resumeId)
       .then(resume => {
         if (cancelled) return;
+        clearTimeout(fallbackTimer);
         if (resume && resume.meta && resume.sections) {
           dispatch({ type: 'LOAD_STATE', payload: { meta: resume.meta, sections: resume.sections } });
         }
-        // Even if resume is null (just created from dashboard), state was already set via dispatch before navigate
         setReady(true);
       })
       .catch(err => {
         console.error('Failed to load resume:', err);
-        // Still mark as ready — the Dashboard already loaded state before navigating
+        clearTimeout(fallbackTimer);
         if (!cancelled) setReady(true);
       });
 
-    return () => { cancelled = true; };
+    return () => { 
+      cancelled = true; 
+      clearTimeout(fallbackTimer);
+    };
   }, [currentUser?.uid, resumeId]);
 
   if (!ready || !state?.meta || !state?.sections) {
