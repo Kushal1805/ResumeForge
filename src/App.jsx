@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ResumeContextProvider } from './context/ResumeContext';
 import { AuthProvider } from './context/AuthContext';
 import LandingPage from './pages/LandingPage';
@@ -10,7 +10,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 
 export default function App() {
   return (
-    <HashRouter>
+    <BrowserRouter basename="/ResumeForge">
       <AuthProvider>
         <ResumeContextProvider>
           <Routes>
@@ -38,6 +38,6 @@ export default function App() {
           </Routes>
         </ResumeContextProvider>
       </AuthProvider>
-    </HashRouter>
+    </BrowserRouter>
   );
 }
